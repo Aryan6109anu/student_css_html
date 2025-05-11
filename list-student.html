@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Student List</title>
+  <style>
+    body {
+      background: #e3f2fd;
+      font-family: 'Arial', sans-serif;
+      padding: 40px;
+    }
+    h2 {
+      text-align: center;
+      color: #333;
+      margin-bottom: 30px;
+    }
+    .student-card {
+      background: white;
+      padding: 20px;
+      margin: 15px auto;
+      border-radius: 8px;
+      max-width: 500px;
+      box-shadow: 0 5px 10px rgba(0,0,0,0.1);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .student-info {
+      flex: 1;
+    }
+    .delete-btn {
+      background: #dc3545;
+      border: none;
+      color: white;
+      padding: 8px 14px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .delete-btn:hover {
+      background: #c82333;
+    }
+    .back-link {
+      display: block;
+      margin-top: 30px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <h2>📋 All Students</h2>
+  <div id="studentList"></div>
+  <a class="back-link" href="home.html">⬅️ Back to Home</a>
+
+  <script>
+    function loadStudents() {
+      fetch('http://localhost:8080/students')
+        .then(res => res.json())
+        .then(data => {
+          const list = document.getElementById('studentList');
+          list.innerHTML = '';
+          data.forEach(student => {
+            const card = document.createElement('div');
+            card.className = 'student-card';
+            card.innerHTML = `
+              <div class="student-info">
+                <strong>${student.name}</strong><br />
+                Phone: ${student.phone}
+              </div>
+              <button class="delete-btn" onclick="deleteStudent(${student.id})">🗑️ Delete</button>
+            `;
+            list.appendChild(card);
+          });
+        });
+    }
+
+    function deleteStudent(id) {
+      if (confirm("Are you sure to delete this student?")) {
+        fetch(`http://localhost:8080/students/${id}`, {
+          method: 'DELETE'
+        })
+        .then(res => {
+          if (res.ok) {
+            alert("🗑️ Student deleted successfully!");
+            loadStudents();
+          }
+        });
+      }
+    }
+
+    loadStudents();
+  </script>
+</body>
+</html>

@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Add Student</title>
+  <style>
+    body {
+      background: #f0f2f5;
+      font-family: Arial, sans-serif;
+      padding: 50px;
+    }
+    .container {
+      max-width: 400px;
+      margin: auto;
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    }
+    h2 {
+      text-align: center;
+      color: #333;
+    }
+    input {
+      width: 100%;
+      padding: 12px;
+      margin: 12px 0;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
+    button {
+      width: 100%;
+      padding: 12px;
+      background-color: #28a745;
+      color: white;
+      font-weight: bold;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #218838;
+    }
+    .back-link {
+      display: block;
+      margin-top: 20px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Add New Student</h2>
+    <input type="text" id="name" placeholder="Enter student name" />
+    <input type="text" id="phone" placeholder="Enter phone number" />
+    <button onclick="addStudent()">Add Student</button>
+    <a class="back-link" href="home.html">⬅️ Back to Home</a>
+  </div>
+
+  <script>
+    function addStudent() {
+      const name = document.getElementById('name').value;
+      const phone = document.getElementById('phone').value;
+
+      fetch('http://localhost:8080/students', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, phone })
+      })
+      .then(response => {
+        if (response.ok) {
+          alert("✅ Student Added Successfully!");
+          document.getElementById('name').value = '';
+          document.getElementById('phone').value = '';
+        } else {
+          alert("❌ Failed to Add Student.");
+        }
+      });
+    }
+  </script>
+</body>
+</html>
